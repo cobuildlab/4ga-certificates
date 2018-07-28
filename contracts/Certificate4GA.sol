@@ -2,6 +2,9 @@ pragma solidity ^0.4.24;
 
 
 contract CertificateGenerator {
+    string dean_first_name;
+    string dean_last_name;
+
     struct Certificate { // Struct
         string first_name;
         string last_name;
@@ -26,9 +29,19 @@ contract CertificateGenerator {
         creator = msg.sender;
     }
 
-    function setDean(address new_dean) onlyCreator public{
+    function setDean(address new_dean, string first_name, string last_name) onlyCreator public{
         dean = new_dean;
+        dean_first_name = first_name;
+        dean_last_name = last_name;
     }
 
-    function createCertificate()
+    function createCertificate(string first_name, string last_name) onlyDean public{
+        // TODO: check parameters validity
+        // TODO: check if the user does not have a certificate already
+        Certificate memory certificate = Certificate();
+        certificate.first_name = first_name;
+        certificate.last_name = last_name;
+        registry[msg.sender] = certificate;
+        emit CREATED(dean, msg.sender, certificate);
+    }
 }
